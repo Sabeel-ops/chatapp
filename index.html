@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.io Chat</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #chat-container {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 800px; /* Adjust as needed */
+      height: 80vh; /* Adjust as needed */
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #messages {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      flex: 1;
+      overflow-y: scroll;
+      border-bottom: 1px solid #ccc;
+    }
+
+    #messages li {
+      padding: 5px 10px;
+    }
+
+    #messages li:nth-child(odd) {
+      background-color: #f2f2f2;
+    }
+
+    #form {
+      display: flex;
+      padding: 10px;
+    }
+
+    #input {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 14px;
+    }
+
+    #input:focus {
+      outline: none;
+    }
+
+    button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 3px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+    
+  <div id="chat-container">
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" />
+      <button>Send</button>
+    </form>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(() => {
+      const socket = io();
+
+      $('form').submit(() => {
+        socket.emit('chat message', $('#input').val());
+        $('#input').val('');
+        return false;
+      });
+
+      socket.on('chat message', (msg) => {
+        $('#messages').append($('<li>').text(msg));
+        $('#messages').scrollTop($('#messages')[0].scrollHeight);
+      });
+    });
+  </script>
+</body>
+</html>
